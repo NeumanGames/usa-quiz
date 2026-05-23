@@ -104,10 +104,21 @@ To use on GitHub Pages, rename the quiz file to `index.html`, push both files to
 
 ---
 
+## Support NeumanGames™
+
+Every game on this platform is free, forever. If USA Explorer has been helpful for a student in your life, your support helps us build the next one.
+
+- 🎁 **One-time donation:** [ko-fi.com/neumangames](https://ko-fi.com/neumangames)
+- ⭐ **Monthly support & community:** [patreon.com/NeumanGames](https://www.patreon.com/NeumanGames)
+
+Works on any device with a web browser — no login, no download, no cost.
+
+---
+
 ## Legal
 
-NeumanGames™ and USA Explorer are trademarks of NeumanGames. All rights reserved.
+NeumanGames™ is a trademark of NeumanGames. All rights reserved.
 
 This game is provided free of charge for educational use. No reproduction or redistribution for commercial purposes without permission.
 
-&copy; NeumanGames™ — [neumangames.github.io](https://neumangames.github.io)
+© NeumanGames™ — [neumangames.github.io](https://neumangames.github.io)

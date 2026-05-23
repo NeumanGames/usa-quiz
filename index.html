@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="USA Explorer — a free interactive map quiz by NeumanGames™ helping students learn all 50 U.S. states and capitals. Works on any device with a web browser.">
+<meta property="og:title" content="USA Explorer — States & Capitals Quiz | NeumanGames™">
+<meta property="og:description" content="Free interactive map quiz helping students learn all 50 U.S. states and capitals. Four quiz modes, smart learning algorithm. Works on any device.">
+<meta property="og:url" content="https://neumangames.github.io/usa-quiz/">
+<meta name="theme-color" content="#1D4ED8">
 <title>USA Explorer — States & Capitals Quiz</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
@@ -37,11 +42,12 @@ header h1{font-family:'Fredoka One',cursive;font-size:22px;color:#fff;letter-spa
 .dot{width:9px;height:9px;border-radius:50%;}
 .dr{background:var(--green)}.dw{background:var(--red)}.ds{background:var(--sun);}
 main{display:flex;flex-direction:column;align-items:center;padding:0 14px 28px;gap:12px;}
-.q-card{background:var(--white);border-radius:var(--r);box-shadow:var(--shadow);padding:15px 22px;max-width:900px;width:100%;text-align:center;}
+.q-card{background:var(--white);border-radius:var(--r);box-shadow:var(--shadow);padding:15px 22px;max-width:1400px;width:100%;text-align:center;}
 .q-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:5px;}
 .q-text{font-family:'Fredoka One',cursive;font-size:20px;color:var(--text);line-height:1.3;}
 .q-text span{color:var(--sky);}
-.map-wrap{max-width:900px;width:100%;background:var(--white);border-radius:var(--r);box-shadow:var(--shadow);padding:10px;position:relative;}
+.map-wrap{max-width:1400px;width:100%;background:var(--white);border-radius:var(--r);box-shadow:var(--shadow);padding:10px;position:relative;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.map-scroll-inner{min-width:480px;width:100%;}
 #us-map{width:100%;height:auto;display:block;}
 .state-path{stroke:#b0c4d8;stroke-width:0.6;stroke-linejoin:round;fill:#f0f5fa;cursor:default;transition:fill .12s;}
 .state-path.clickable{cursor:pointer;}
@@ -49,30 +55,56 @@ main{display:flex;flex-direction:column;align-items:center;padding:0 14px 28px;g
 .state-path.highlighted{fill:#FEF08A!important;stroke:#CA8A04;stroke-width:1.8;}
 .state-path.correct-ans{fill:#BBF7D0!important;stroke:#16A34A;stroke-width:1.8;}
 .state-path.wrong-ans{fill:#FECACA!important;stroke:#DC2626;stroke-width:1.8;}
-.state-label{font-family:'Nunito',sans-serif;font-weight:800;fill:#475569;pointer-events:none;font-size:9px;}
+.state-label{font-family:'Nunito',sans-serif;font-weight:900;fill:#334155;pointer-events:none;paint-order:stroke fill;}
 .choices{display:grid;grid-template-columns:1fr 1fr;gap:9px;max-width:900px;width:100%;}
 .choice-btn{font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;padding:13px 16px;border-radius:var(--r-sm);border:2px solid #E2E8F0;background:var(--white);color:var(--text);cursor:pointer;transition:all .14s;box-shadow:0 2px 5px rgba(0,0,0,.05);text-align:left;line-height:1.3;}
 .choice-btn:hover:not(:disabled){border-color:var(--sky);background:var(--sky-lt);transform:translateY(-1px);}
 .choice-btn.correct{background:var(--green-lt);border-color:var(--green);color:#065F46;}
 .choice-btn.wrong{background:var(--red-lt);border-color:var(--red);color:#991B1B;}
 .choice-btn:disabled{cursor:default;}
-.feedback{max-width:900px;width:100%;border-radius:var(--r-sm);padding:13px 18px;font-weight:800;font-size:16px;text-align:center;display:none;animation:slideIn .22s ease;}
+.feedback{max-width:1400px;width:100%;border-radius:var(--r-sm);padding:13px 18px;font-weight:800;font-size:16px;text-align:center;display:none;animation:slideIn .22s ease;}
 @keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .feedback.show{display:block;}
 .feedback.ok{background:var(--green-lt);color:#065F46;border:2px solid var(--green);}
 .feedback.bad{background:var(--red-lt);color:#991B1B;border:2px solid var(--red);}
-.next-btn{font-family:'Fredoka One',cursive;font-size:19px;padding:13px 46px;border-radius:50px;border:none;background:var(--sky);color:#fff;cursor:pointer;box-shadow:0 4px 14px rgba(29,78,216,.3);transition:all .16s;display:none;}
+.next-btn{font-family:'Fredoka One',cursive;font-size:19px;padding:13px 46px;border-radius:50px;border:none;background:var(--sky);color:#fff;cursor:pointer;box-shadow:0 4px 14px rgba(29,78,216,.3);transition:all .16s;display:none;max-width:1400px;}
 .next-btn.show{display:block;}
 .next-btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(29,78,216,.38);}
-.map-hint{font-weight:700;font-size:13px;color:var(--muted);text-align:center;max-width:900px;width:100%;display:none;}
+.map-hint{font-weight:700;font-size:13px;color:var(--muted);text-align:center;max-width:1400px;width:100%;display:none;}
 .map-hint.show{display:block;}
 .confetti-layer{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:9999;display:none;}
 .confetti-layer.show{display:block;}
 .tooltip{position:fixed;background:#1E293B;color:#fff;font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;padding:4px 9px;border-radius:5px;pointer-events:none;z-index:1000;display:none;white-space:nowrap;}
+.map-scroll-hint{display:none;text-align:center;font-size:11px;font-weight:700;color:var(--muted);padding:4px 0 2px;letter-spacing:.3px;}
 .inset-label{font-family:'Nunito',sans-serif;font-size:8.5px;font-weight:700;fill:#94a3b8;}
-@media(max-width:560px){.choices{grid-template-columns:1fr;} header h1{font-size:18px;} .q-text{font-size:17px;}}
+/* Large screens — expand map fully */
+@media(min-width:1200px){
+  .q-text{font-size:22px;}
+}
+/* Medium screens */
+@media(max-width:900px){
+  header{flex-wrap:wrap;gap:8px;}
+  .q-text{font-size:18px;}
+}
+/* Small tablets and large phones */
+@media(max-width:680px){
+  .choices{grid-template-columns:1fr;}
+  header h1{font-size:18px;}
+  .q-text{font-size:16px;}
+  .map-wrap{padding:6px;}
+  .mode-bar{gap:5px;padding:10px 10px 4px;}
+  .mode-btn{font-size:12px;padding:7px 11px;}
+}
+/* Phones — horizontal scroll hint */
+@media(max-width:480px){
+  header h1{font-size:16px;}
+  .q-text{font-size:15px;}
+  .score-bar{gap:10px;}
+  .pill{font-size:12px;padding:4px 10px;}
+  .map-scroll-hint{display:block;}
+}
 
-.progress-bar-wrap{max-width:900px;width:100%;background:var(--white);border-radius:var(--r);box-shadow:var(--shadow);padding:14px 18px;margin-bottom:2px;}
+.progress-bar-wrap{max-width:1400px;width:100%;background:var(--white);border-radius:var(--r);box-shadow:var(--shadow);padding:14px 18px;margin-bottom:2px;}
 .progress-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;cursor:pointer;user-select:none;}
 .progress-header h3{font-family:'Fredoka One',cursive;font-size:16px;color:var(--text);}
 .progress-header .toggle-arrow{font-size:13px;color:var(--muted);font-weight:700;}
@@ -113,7 +145,8 @@ main{display:flex;flex-direction:column;align-items:center;padding:0 14px 28px;g
       Show state names on hover
     </label>
     <a class="help-link" href="https://github.com/NeumanGames/usa-quiz/blob/main/README.md" target="_blank" rel="noopener">❓ How to Use</a>
-    <a class="help-link" href="https://www.patreon.com/NeumanGames" target="_blank" rel="noopener" style="background:rgba(255,130,0,0.25);border-color:rgba(255,160,60,0.5);">❤️ Support Us</a>
+    <a class="help-link" href="https://ko-fi.com/neumangames" target="_blank" rel="noopener" style="background:rgba(41,171,226,0.25);border-color:rgba(41,171,226,0.6);">🎁 Donate</a>
+    <a class="help-link" href="https://www.patreon.com/NeumanGames" target="_blank" rel="noopener" style="background:rgba(255,130,0,0.25);border-color:rgba(255,160,60,0.5);">⭐ Join Patreon</a>
   </div>
 </header>
 
@@ -145,14 +178,17 @@ main{display:flex;flex-direction:column;align-items:center;padding:0 14px 28px;g
     <div class="q-label" id="q-label">Question</div>
     <div class="q-text" id="q-text">Loading…</div>
   </div>
-  <div class="map-hint" id="map-hint">👇 Click the correct state on the map!</div>
-  <div class="map-wrap">
-    <svg id="us-map" viewBox="0 0 960 610" xmlns="http://www.w3.org/2000/svg">
-    </svg>
-  </div>
   <div class="choices" id="choices"></div>
   <div class="feedback" id="feedback"></div>
   <button class="next-btn" id="next-btn" onclick="nextQ()">Next ➜</button>
+  <div class="map-hint" id="map-hint">👇 Click the correct state on the map!</div>
+  <div class="map-wrap">
+    <div class="map-scroll-hint">← Scroll to see full map →</div>
+    <div class="map-scroll-inner">
+      <svg id="us-map" viewBox="0 0 960 610" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto;">
+      </svg>
+    </div>
+  </div>
 </main>
 <div class="confetti-layer" id="cfx"><canvas id="cfxc"></canvas></div>
 <div class="tooltip" id="tip"></div>
@@ -345,11 +381,28 @@ function buildMap(highlightAbbr,clickable){
       const raw=STATE_CENTROIDS[state.abbr];
       const cx=oc?oc[0]:raw[0], cy=oc?oc[1]:raw[1];
       const tiny=['CT','DE','RI','NJ','NH','VT','MA','MD','WV'];
+      // Font size scales with viewBox (960 wide). At full width, 9px; smaller screens stay readable.
+      // SVG viewBox is 960 wide; we scale font so it's always proportional to state size.
+      const baseFontSize = tiny.includes(state.abbr) ? 7.5 : 10.5;
       const t=document.createElementNS('http://www.w3.org/2000/svg','text');
       t.setAttribute('x',cx);t.setAttribute('y',cy);
       t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');
       t.setAttribute('class','state-label');
-      t.setAttribute('font-size',tiny.includes(state.abbr)?'7':'9');
+      t.setAttribute('font-size', baseFontSize);
+      // Bold stroke behind text for legibility at small sizes
+      const ts=document.createElementNS('http://www.w3.org/2000/svg','text');
+      ts.setAttribute('x',cx);ts.setAttribute('y',cy);
+      ts.setAttribute('text-anchor','middle');ts.setAttribute('dominant-baseline','middle');
+      ts.setAttribute('font-family','Nunito, sans-serif');
+      ts.setAttribute('font-weight','900');
+      ts.setAttribute('font-size', baseFontSize);
+      ts.setAttribute('stroke','rgba(255,255,255,0.85)');
+      ts.setAttribute('stroke-width','2.5');
+      ts.setAttribute('stroke-linejoin','round');
+      ts.setAttribute('fill','none');
+      ts.setAttribute('pointer-events','none');
+      ts.textContent=state.abbr;
+      svg.appendChild(ts);
       t.textContent=state.abbr;
       svg.appendChild(t);
     }
@@ -593,9 +646,14 @@ function confetti(){
 updateProgress();
 nextQ();
 </script>
-<footer style="text-align:center;padding:18px 16px 24px;font-family:'Nunito',sans-serif;font-size:11px;color:#94A3B8;line-height:1.6;">
-  NeumanGames&#x2122; and USA Explorer are trademarks of NeumanGames. All rights reserved.<br>
-  Free forever &mdash; <a href="https://www.patreon.com/NeumanGames" target="_blank" rel="noopener" style="color:#93C5FD;text-decoration:none;font-weight:700;">Support us on Patreon</a> &nbsp;&bull;&nbsp; <a href="https://neumangames.github.io/usa-quiz/" target="_blank" rel="noopener" style="color:#93C5FD;text-decoration:none;font-weight:700;">neumangames.github.io</a>
+<footer style="text-align:center;padding:18px 16px 24px;font-family:'Nunito',sans-serif;font-size:11px;color:#94A3B8;line-height:1.8;">
+  NeumanGames&#x2122; is a trademark of NeumanGames. All rights reserved.<br>
+  Free forever &mdash; Works on any device with a web browser<br>
+  <a href="https://ko-fi.com/neumangames" target="_blank" rel="noopener" style="color:#29ABE2;text-decoration:none;font-weight:700;">🎁 Make a Donation on Ko-fi</a>
+  &nbsp;&bull;&nbsp;
+  <a href="https://www.patreon.com/NeumanGames" target="_blank" rel="noopener" style="color:#FF8A00;text-decoration:none;font-weight:700;">⭐ Join us on Patreon</a>
+  &nbsp;&bull;&nbsp;
+  <a href="https://neumangames.github.io" target="_blank" rel="noopener" style="color:#93C5FD;text-decoration:none;font-weight:700;">neumangames.github.io</a>
 </footer>
 </body>
 </html>
