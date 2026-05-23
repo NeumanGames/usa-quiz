@@ -1,4 +1,4 @@
-# 🗺️ USA Explorer™ — States & Capitals Quiz
+# 🗺️ USA Explorer — States & Capitals Quiz
 
 *A free learning game by NeumanGames™*
 
@@ -8,7 +8,7 @@ An interactive geography quiz that helps 4th grade students learn all 50 US stat
 
 ## What It Is
 
-USA Explorer™ is a single HTML file that runs in any web browser — no app store, no installation, no internet required after the first load. Students study the **geographic shape and location** of every state, and learn all 50 **capital cities**, through four different quiz modes and a built-in learning algorithm that focuses practice where it's needed most.
+USA Explorer is a single HTML file that runs in any web browser — no app store, no installation, no internet required after the first load. Students study the **geographic shape and location** of every state, and learn all 50 **capital cities**, through four different quiz modes and a built-in learning algorithm that focuses practice where it's needed most.
 
 ---
 
@@ -97,7 +97,7 @@ The result is that a student who keeps getting Texas right will see it less and 
 
 | File | Description |
 |---|---|
-| `index.html` | The entire NeumanGames™ USA Explorer™ app — rename `us_states_quiz.html` to `index.html` for GitHub Pages |
+| `index.html` | The entire NeumanGames™ USA Explorer app — rename `us_states_quiz.html` to `index.html` for GitHub Pages |
 | `README.md` | This document |
 
 To use on GitHub Pages, rename the quiz file to `index.html`, push both files to a public repository, and enable GitHub Pages in the repository Settings under Pages → Source → main branch.
@@ -106,7 +106,7 @@ To use on GitHub Pages, rename the quiz file to `index.html`, push both files to
 
 ## Legal
 
-NeumanGames™ and USA Explorer™ are trademarks of NeumanGames. All rights reserved.
+NeumanGames™ and USA Explorer are trademarks of NeumanGames. All rights reserved.
 
 This game is provided free of charge for educational use. No reproduction or redistribution for commercial purposes without permission.
 
