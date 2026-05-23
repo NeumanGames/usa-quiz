@@ -16,7 +16,7 @@ USA Explorer is a single HTML file that runs in any web browser — no app store
 
 ### Opening the App
 
-Open the file in any web browser (Safari, Chrome, Firefox) or visit the hosted URL. On an iPad, tap the **Share** button in Safari and choose **"Add to Home Screen"** to save it as a full-screen app icon.
+Open the file in any web browser or visit the hosted URL. Works on any device with a web browser. On a tablet or mobile device, use your browser's **"Add to Home Screen"** option to save it as a full-screen app icon for easy access.
 
 ---
 
@@ -40,7 +40,7 @@ Switch modes any time. Your progress carries over across all modes.
 Two toggles in the top-right corner of the header:
 
 - **Show abbreviations** — displays the two-letter state code (AL, CA, TX…) inside each state shape. Turn this off for a harder challenge once the locations are familiar.
-- **Show state names on hover** — moving the mouse (or a paired mouse/stylus on iPad) over any state shows its full name in a tooltip. Useful when studying capitals, but best turned **off** when quizzing on state names so it does not give away the answer.
+- **Show state names on hover** — moving the mouse or stylus over any state shows its full name in a tooltip. Useful when studying capitals, but best turned **off** when quizzing on state names so it does not give away the answer.
 
 ---
 
