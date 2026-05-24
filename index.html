@@ -260,9 +260,9 @@ const STATES = [
 
 // Manual centroid overrides for better label placement on small/odd-shaped states
 const CENTROID_OVERRIDES = {
-  MI:[534,600], MD:[780,775], DE:[815,760], RI:[870,703],
-  CT:[845,712], NJ:[820,742], MA:[858,695], NH:[850,660],
-  VT:[835,658], WV:[735,793], FL:[660,440]
+  MI:[580,170], MD:[720,228], DE:[748,212], RI:[810,148],
+  CT:[800,158], NJ:[757,188], MA:[808,132], NH:[808,100],
+  VT:[808,113], FL:[660,440]
 };
 
 let mode='states-mc', answered=false, currentQ=null;
@@ -355,18 +355,15 @@ function buildMap(highlightAbbr,clickable){
   svg.innerHTML='';
   // Inset borders
   const borders=[
-    {x:5,y:505,w:218,h:100,label:'Alaska'},
-    {x:228,y:505,w:215,h:100,label:'Hawaii'}
+    {x:8,y:503,w:103,h:83,abbr:'AK'},
+    {x:213,y:503,w:110,h:77,abbr:'HI'}
   ];
   borders.forEach(b=>{
     const r=document.createElementNS('http://www.w3.org/2000/svg','rect');
     r.setAttribute('x',b.x);r.setAttribute('y',b.y);r.setAttribute('width',b.w);r.setAttribute('height',b.h);
     r.setAttribute('fill','none');r.setAttribute('stroke','#CBD5E1');r.setAttribute('stroke-width','0.8');r.setAttribute('rx','4');
     svg.appendChild(r);
-    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
-    t.setAttribute('x',b.x+b.w/2);t.setAttribute('y',b.y+b.h-4);
-    t.setAttribute('text-anchor','middle');t.setAttribute('class','inset-label');
-    t.textContent=b.label;svg.appendChild(t);
+    // AK/HI labels drawn after all state paths — see end of buildMap
   });
 
   STATES.forEach(state=>{
@@ -385,36 +382,90 @@ function buildMap(highlightAbbr,clickable){
     svg.appendChild(path);
 
     if(showAbbr){
+      // AK and HI are handled by inset box rendering above
+      if(state.abbr==='AK'||state.abbr==='HI') return;
       const oc=CENTROID_OVERRIDES[state.abbr];
       const raw=STATE_CENTROIDS[state.abbr];
       const cx=oc?oc[0]:raw[0], cy=oc?oc[1]:raw[1];
+      // Skip if label would land inside inset area or outside viewBox
+      if(cy>498||cx<5||cx>955) return;
       const tiny=['CT','DE','RI','NJ','NH','VT','MA','MD','WV'];
-      // Font size scales with viewBox (960 wide). At full width, 9px; smaller screens stay readable.
-      // SVG viewBox is 960 wide; we scale font so it's always proportional to state size.
-      const baseFontSize = tiny.includes(state.abbr) ? 7.5 : 10.5;
-      const t=document.createElementNS('http://www.w3.org/2000/svg','text');
-      t.setAttribute('x',cx);t.setAttribute('y',cy);
-      t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');
-      t.setAttribute('class','state-label');
-      t.setAttribute('font-size', baseFontSize);
-      // Bold stroke behind text for legibility at small sizes
+      const baseFontSize = tiny.includes(state.abbr) ? 8.5 : 10.5;
+      // Leader lines for small/offset states
+      const leaderTargets = {
+        CT:[748,156], RI:[764,147], NJ:[726,186], NH:[753,108],
+        VT:[739,108], MA:[766,138], MD:[703,218], DE:[720,206]
+      };
+      if(leaderTargets[state.abbr] && oc){
+        // Use actual STATE_CENTROIDS as the definitive dot endpoint
+        const rc=STATE_CENTROIDS[state.abbr];
+        const [tx,ty] = [rc[0],rc[1]];
+        const dist = Math.sqrt((cx-tx)**2+(cy-ty)**2);
+        if(dist > 8){
+          const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+          line.setAttribute('x1',cx);line.setAttribute('y1',cy);
+          line.setAttribute('x2',tx);line.setAttribute('y2',ty);
+          line.setAttribute('stroke','#64748B');line.setAttribute('stroke-width','0.8');
+          line.setAttribute('stroke-linecap','round');
+          line.setAttribute('stroke-dasharray','2,1.5');
+          line.setAttribute('pointer-events','none');
+          svg.appendChild(line);
+          // Filled dot clearly at state centroid
+          const dotOuter=document.createElementNS('http://www.w3.org/2000/svg','circle');
+          dotOuter.setAttribute('cx',tx);dotOuter.setAttribute('cy',ty);dotOuter.setAttribute('r','2.5');
+          dotOuter.setAttribute('fill','#fff');dotOuter.setAttribute('pointer-events','none');
+          svg.appendChild(dotOuter);
+          const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+          dot.setAttribute('cx',tx);dot.setAttribute('cy',ty);dot.setAttribute('r','1.8');
+          dot.setAttribute('fill','#64748B');dot.setAttribute('pointer-events','none');
+          svg.appendChild(dot);
+        }
+      }
+      // Stroke halo behind text
       const ts=document.createElementNS('http://www.w3.org/2000/svg','text');
       ts.setAttribute('x',cx);ts.setAttribute('y',cy);
       ts.setAttribute('text-anchor','middle');ts.setAttribute('dominant-baseline','middle');
       ts.setAttribute('font-family','Nunito, sans-serif');
       ts.setAttribute('font-weight','900');
       ts.setAttribute('font-size', baseFontSize);
-      ts.setAttribute('stroke','rgba(255,255,255,0.85)');
-      ts.setAttribute('stroke-width','2.5');
+      ts.setAttribute('stroke','rgba(255,255,255,0.92)');
+      ts.setAttribute('stroke-width','3');
       ts.setAttribute('stroke-linejoin','round');
       ts.setAttribute('fill','none');
       ts.setAttribute('pointer-events','none');
       ts.textContent=state.abbr;
       svg.appendChild(ts);
+      // Main label
+      const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x',cx);t.setAttribute('y',cy);
+      t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');
+      t.setAttribute('class','state-label');
+      t.setAttribute('font-size', baseFontSize);
       t.textContent=state.abbr;
       svg.appendChild(t);
     }
   });
+
+  // Draw AK/HI abbreviations LAST so they appear on top of all state paths
+  if(showAbbr){
+    const insetCentroids={AK:[68.0,528.0],HI:[275.5,539.5]};
+    [{abbr:'AK'},{abbr:'HI'}].forEach(b=>{
+      const ic=insetCentroids[b.abbr];
+      const ts=document.createElementNS('http://www.w3.org/2000/svg','text');
+      ts.setAttribute('x',ic[0]);ts.setAttribute('y',ic[1]);
+      ts.setAttribute('text-anchor','middle');ts.setAttribute('dominant-baseline','middle');
+      ts.setAttribute('font-family','Nunito, sans-serif');ts.setAttribute('font-weight','900');
+      ts.setAttribute('font-size','10.5');ts.setAttribute('stroke','rgba(255,255,255,0.92)');
+      ts.setAttribute('stroke-width','3');ts.setAttribute('stroke-linejoin','round');
+      ts.setAttribute('fill','none');ts.setAttribute('pointer-events','none');
+      ts.textContent=b.abbr;svg.appendChild(ts);
+      const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x',ic[0]);t.setAttribute('y',ic[1]);
+      t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');
+      t.setAttribute('class','state-label');t.setAttribute('font-size','10.5');
+      t.textContent=b.abbr;svg.appendChild(t);
+    });
+  }
 }
 
 function toggleAbbr(v){
@@ -425,6 +476,27 @@ function toggleAbbr(v){
   // Re-flash answers if already answered
   if(answered&&currentQ){
     flashAnswers();
+  }
+
+  // Draw AK/HI abbreviations LAST so they appear on top of state paths
+  if(showAbbr){
+    const insetCentroids={AK:[68.0,528.0],HI:[275.5,539.5]};
+    [{abbr:'AK'},{abbr:'HI'}].forEach(b=>{
+      const ic=insetCentroids[b.abbr];
+      const ts=document.createElementNS('http://www.w3.org/2000/svg','text');
+      ts.setAttribute('x',ic[0]);ts.setAttribute('y',ic[1]);
+      ts.setAttribute('text-anchor','middle');ts.setAttribute('dominant-baseline','middle');
+      ts.setAttribute('font-family','Nunito, sans-serif');ts.setAttribute('font-weight','900');
+      ts.setAttribute('font-size','10.5');ts.setAttribute('stroke','rgba(255,255,255,0.92)');
+      ts.setAttribute('stroke-width','3');ts.setAttribute('stroke-linejoin','round');
+      ts.setAttribute('fill','none');ts.setAttribute('pointer-events','none');
+      ts.textContent=b.abbr;svg.appendChild(ts);
+      const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x',ic[0]);t.setAttribute('y',ic[1]);
+      t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');
+      t.setAttribute('class','state-label');t.setAttribute('font-size','10.5');
+      t.textContent=b.abbr;svg.appendChild(t);
+    });
   }
 }
 
