@@ -64,8 +64,8 @@ main{display:flex;flex-direction:column;align-items:center;padding:0 14px 28px;g
 .state-path.clickable{cursor:pointer;}
 .state-path.clickable:hover{fill:#dbeafe!important;stroke:#3B82F6;stroke-width:1.2;}
 .state-path.highlighted{fill:#FEF08A!important;stroke:#CA8A04;stroke-width:1.8;}
-.state-path.correct-ans{fill:#BBF7D0!important;stroke:#16A34A;stroke-width:1.8;}
-.state-path.wrong-ans{fill:#FECACA!important;stroke:#DC2626;stroke-width:1.8;}
+.state-path.correct-ans{fill:#4ADE80!important;stroke:#15803D;stroke-width:2.5;}
+.state-path.wrong-ans{fill:#F87171!important;stroke:#B91C1C;stroke-width:2.5;}
 .state-label{font-family:'Nunito',sans-serif;font-weight:900;fill:#334155;pointer-events:none;paint-order:stroke fill;}
 .choices{display:grid;grid-template-columns:1fr 1fr;gap:9px;max-width:900px;width:100%;}
 .choice-btn{font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;padding:13px 16px;border-radius:var(--r-sm);border:2px solid #E2E8F0;background:var(--white);color:var(--text);cursor:pointer;transition:all .14s;box-shadow:0 2px 5px rgba(0,0,0,.05);text-align:left;line-height:1.3;}
@@ -528,6 +528,7 @@ function nextQ(){
   document.getElementById('feedback').className='feedback';
   document.getElementById('next-btn').className='next-btn';
   document.getElementById('map-hint').className='map-hint';
+  lastWrongAbbr=null;
   currentQ=genQ();
   answered=false;
   const {correct,choices}=currentQ;
@@ -587,10 +588,13 @@ function handleChoice(btn,chosenAbbr,correctAbbr,choices,labelFn){
   document.getElementById('next-btn').className='next-btn show';
 }
 
+let lastWrongAbbr = null;
+
 function handleMapClick(abbr){
   if(answered)return;answered=true;
   const ca=currentQ.correct.abbr;
   const ok=abbr===ca;
+  lastWrongAbbr = ok ? null : abbr;
   recordAnswer(ok);
   flashState(ca,'correct-ans');
   if(!ok)flashState(abbr,'wrong-ans');
@@ -601,16 +605,35 @@ function handleMapClick(abbr){
 }
 
 function flashAnswers(){
-  // Re-apply visual state after abbr toggle when answered
+  // Re-apply correct/wrong colors after abbr toggle when already answered
   if(!currentQ)return;
   const ca=currentQ.correct.abbr;
   const el=document.getElementById('st-'+ca);
   if(el)el.className='state-path correct-ans';
+  if(lastWrongAbbr){
+    const we=document.getElementById('st-'+lastWrongAbbr);
+    if(we)we.className='state-path wrong-ans';
+  }
+  if(lastWrongAbbr){
+    const we=document.getElementById('st-'+lastWrongAbbr);
+    if(we)we.className='state-path wrong-ans';
+  }
 }
 
 function flashState(abbr,cls){
   const el=document.getElementById('st-'+abbr);
-  if(el){el.className='state-path '+cls;}
+  if(!el)return;
+  el.className='state-path '+cls;
+  // Use inline style to guarantee color overrides any CSS regardless of specificity
+  if(cls==='correct-ans'){
+    el.style.fill='#4ADE80';
+    el.style.stroke='#15803D';
+    el.style.strokeWidth='2.5';
+  } else if(cls==='wrong-ans'){
+    el.style.fill='#F87171';
+    el.style.stroke='#B91C1C';
+    el.style.strokeWidth='2.5';
+  }
 }
 
 function recordAnswer(ok){
