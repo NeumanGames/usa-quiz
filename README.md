@@ -37,10 +37,19 @@ Switch modes any time. Your progress carries over across all modes.
 
 ### Display Options
 
-Two toggles in the top-right corner of the header:
+The header contains three display controls:
 
 - **Show abbreviations** — displays the two-letter state code (AL, CA, TX…) inside each state shape. Turn this off for a harder challenge once the locations are familiar.
-- **Show state names on hover** — moving the mouse or stylus over any state shows its full name in a tooltip. Useful when studying capitals, but best turned **off** when quizzing on state names so it does not give away the answer.
+- **Show on hover: ☑ State ☑ Capital** — two independent checkboxes that control what appears in the tooltip when hovering over a state:
+
+|State|Capital|Tooltip shows                                   |
+|-----|-------|------------------------------------------------|
+|✅    |✅      |`Denver, Colorado` — both capital and state name|
+|✅    |☐      |`Colorado` — state name only                    |
+|☐    |✅      |`Denver` — capital city only                    |
+|☐    |☐      |No tooltip shown                                |
+
+Use these independently to focus practice — for example, showing only the capital while hiding the state name challenges students to identify states by shape while reinforcing capital associations.
 
 -----
 
@@ -89,7 +98,8 @@ The result is that a student who keeps getting Texas right will see it less and 
 
 - Start with **“Show abbreviations” on** and **“Show state names on hover” on** while the student is still learning locations
 - Once locations are familiar, turn **abbreviations off** so students recognize shapes without the label hint
-- Turn **hover tooltips off** when quizzing on state names — otherwise the tooltip gives the answer away
+- Turn the **State hover** off when quizzing on state names — otherwise the tooltip gives the answer away. Leave **Capital hover** on to continue reinforcing capital associations even during state-name practice
+- Use **Capital hover only** as an intermediate challenge — students must recognize the state by shape, but can still verify the capital by hovering
 - Use **Click The State** mode to passively introduce capitals — the capital city is shown alongside the state name in every question, building familiarity before students are formally quizzed on it
 - The **Click The State** and **Capital → Click State** modes are harder than multiple choice and good for students who are ready for a real challenge
 - When a student clicks the wrong state, the map highlights their selection in **red** and the correct state in **green** so they can see exactly where the state is located
