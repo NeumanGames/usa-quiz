@@ -542,7 +542,8 @@ function nextQ(){
     renderChoices(choices,c=>c.name,correct.abbr);
   }else if(mode==='states-click'){
     document.getElementById('q-label').textContent='Find the state on the map! 🗺️';
-    document.getElementById('q-text').innerHTML='Click on <span>'+correct.name+'</span>';
+    const capitalHint='<div style="font-size:14px;font-weight:700;color:#64748B;margin-top:6px;">&#127963; Capital: <em style="color:#1D4ED8;">'+correct.capital+'</em></div>';
+    document.getElementById('q-text').innerHTML='Click on <span>'+correct.name+'</span>'+capitalHint;
     buildMap(null,true);
     ch.style.display='none';ch.innerHTML='';
     document.getElementById('map-hint').className='map-hint show';
